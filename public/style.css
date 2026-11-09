@@ -1,0 +1,143 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #fffdf7;
+  color: #29251e;
+  line-height: 1.6;
+}
+
+header {
+  background: #315c36;
+  color: white;
+  padding: 18px 7%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+header h1 {
+  font-size: 28px;
+  letter-spacing: 2px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 18px;
+}
+
+.hero {
+  background: #f1ead7;
+  text-align: center;
+  padding: 75px 20px;
+}
+
+.hero h2 {
+  font-size: 38px;
+  color: #315c36;
+  margin-bottom: 15px;
+}
+
+.hero p {
+  max-width: 650px;
+  margin: auto;
+}
+
+.hero button,
+.order-section button {
+  background: #315c36;
+  color: white;
+  border: none;
+  padding: 13px 25px;
+  margin-top: 22px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+section {
+  padding: 55px 7%;
+}
+
+.section-title {
+  text-align: center;
+  color: #315c36;
+  margin-bottom: 25px;
+  font-size: 28px;
+}
+
+.product-card {
+  max-width: 650px;
+  margin: auto;
+  padding: 25px;
+  background: white;
+  border: 1px solid #e5dfd1;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.order-section {
+  background: #f1ead7;
+}
+
+form {
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+}
+
+form label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+form input,
+form select,
+form textarea {
+  width: 100%;
+  padding: 12px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+form button {
+  width: 100%;
+}
+
+footer {
+  background: #263f2b;
+  color: white;
+  text-align: center;
+  padding: 25px;
+}
+
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  nav a {
+    margin: 0 7px;
+    font-size: 14px;
+  }
+
+  .hero h2 {
+    font-size: 29px;
+  }
+
+  section {
+    padding: 40px 5%;
+  }
+}
