@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Gaunayan - Cow Dung Cakes for Puja, Havan and daily traditional use.">
+<title>GAUNAYAN | Natural Cow Dung Products</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<header>
+  <a class="logo" href="/">GAUNAYAN<span>.</span></a>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#products">Products</a>
+    <a href="#order">Order Now</a>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <div>
+    <p class="tag">TRADITION • PURITY • NATURE</p>
+    <h1>પરંપરાની સાથે<br><span>GAUNAYAN</span></h1>
+    <p>Natural Cow Dung Cakes for Puja, Havan, Religious Rituals and Daily Use.</p>
+    <a class="btn" href="#order">Order Now</a>
+  </div>
+  <div class="hero-art">🌿 🐄 🌿</div>
+</section>
+
+<section id="products">
+  <p class="tag">OUR PRODUCT</p>
+  <h2>Our Products</h2>
+  <div class="product-card">
+    <div class="product-icon">🌱</div>
+    <h3>Cow Dung Cakes</h3>
+    <p>પૂજા, હવન, ધાર્મિક વિધિ અને રોજિંદા ઉપયોગ માટે.</p>
+    <a href="#order">Order Now →</a>
+  </div>
+</section>
+
+<section id="order">
+  <p class="tag">PLACE YOUR ORDER</p>
+  <h2>તમારો ઓર્ડર મોકલો</h2>
+  <p>નીચેની વિગતો ભરીને WhatsApp પર ઓર્ડર મોકલો.</p>
+
+  <form id="orderForm">
+    <label>તમારું નામ</label>
+    <input name="name" required placeholder="તમારું નામ">
+
+    <label>મોબાઇલ નંબર</label>
+    <input name="phone" required maxlength="10"
+    pattern="[6-9][0-9]{9}" placeholder="10 digit number">
+
+    <label>સરનામું</label>
+    <textarea name="address" required placeholder="તમારું સરનામું"></textarea>
+
+    <label>PIN Code</label>
+    <input name="pincode" required maxlength="6"
+    pattern="[0-9]{6}" placeholder="6 digit PIN code">
+
+    <label>કયા ઉપયોગ માટે?</label>
+    <select name="useFor" required>
+      <option value="">પસંદ કરો</option>
+      <option>પૂજા / ધાર્મિક વિધિ</option>
+      <option>હવન</option>
+      <option>વાસણ માટે</option>
+      <option>રોજિંદા ઉપયોગ</option>
+      <option>Bulk Order</option>
+    </select>
+
+    <label>જથ્થો / પેકેજ</label>
+    <input name="quantity" required placeholder="જેમ કે 1 પેક">
+
+    <label>વધારાની માહિતી (Optional)</label>
+    <textarea name="note"></textarea>
+
+    <label class="consent">
+      <input type="checkbox" name="consent" required>
+      હું સંમત છું કે મારી વિગતો ઓર્ડર પ્રક્રિયા માટે ઉપયોગમાં લેવાય.
+      <a href="/privacy.html">Privacy Policy</a>
+    </label>
+
+    <button class="btn" type="submit">Submit Order</button>
+    <p id="message"></p>
+  </form>
+</section>
+
+<footer>
+  <h3>GAUNAYAN</h3>
+  <p>Traditional Cow Dung Products</p>
+  <a href="/privacy.html">Privacy Policy</a>
+  <p>© 2026 GAUNAYAN. All Rights Reserved.</p>
+</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>
