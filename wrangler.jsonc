@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gaunayan-website",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-09",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "gaunayan-orders",
+      "database_id": "02e8de8b-1824-47bc-b8c1-3d1fe973c2a5"
+    }
+  ]
+}
