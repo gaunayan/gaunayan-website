@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAUNAYAN | Admin Dashboard</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f5f5ed;color:#263526}
+header{background:#315b36;color:white;padding:20px}
+header h2{margin:0}
+.container{max-width:1000px;margin:30px auto;padding:15px}
+.card{background:white;padding:25px;border-radius:12px;box-shadow:0 2px 12px #0001;margin-bottom:20px}
+input,button,select{padding:12px;border:1px solid #ccc;border-radius:6px;font-size:15px}
+input{width:100%;margin:12px 0}
+button{background:#315b36;color:white;border:0;cursor:pointer}
+button:disabled{opacity:.6}
+#dashboard{display:none}
+#message{margin-top:12px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid #eee}
+th{background:#edf2e8}
+select{max-width:140px}
+.logout{float:right;background:#fff;color:#315b36}
+.small{color:#666;font-size:13px}
+</style>
+</head>
+<body>
+
+<header>
+  <button class="logout" id="logoutBtn" style="display:none">Logout</button>
+  <h2>GAUNAYAN Admin</h2>
+  <p>Order Management Dashboard</p>
+</header>
+
+<div class="container">
+
+  <div class="card" id="loginBox">
+    <h2>Admin Login</h2>
+    <p>Enter your admin password to continue.</p>
+    <form id="loginForm">
+      <input type="password" id="password" placeholder="Admin Password" required>
+      <button type="submit" id="loginBtn">Login</button>
+    </form>
+    <p id="loginMessage" role="alert"></p>
+  </div>
+
+  <div id="dashboard">
+    <div class="card">
+      <h2>Customer Orders</h2>
+      <p class="small">Latest 200 orders</p>
+      <button id="refreshBtn">Refresh Orders</button>
+      <p id="orderMessage" role="status"></p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Customer</th>
+              <th>Phone</th>
+              <th>Address</th>
+              <th>Purpose</th>
+              <th>Quantity</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="ordersBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const loginBox = document.getElementById("loginBox");
+const dashboard = document.getElementById("dashboard");
+const loginMessage = document.getElementById("loginMessage");
+const orderMessage = document.getElementById("orderMessage");
+const ordersBody = document.getElementById("ordersBody");
+const logoutBtn = document.getElementById("logoutBtn");
+
+function showDashboard() {
+  loginBox.style.display = "none";
+  dashboard.style.display = "block";
+  logoutBtn.style.display = "block";
+  loadOrders();
+}
+
+function showLogin() {
+  loginBox.style.display = "block";
+  dashboard.style.display = "none";
+  logoutBtn.style.display = "none";
+}
+
+async function checkLogin() {
+  try {
+    const response = await fetch("/api/admin/me");
+    if (response.ok) showDashboard();
+    else showLogin();
+  } catch {
+    showLogin();
+  }
+}
+
+document.getElementById("loginForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById("loginBtn");
+  btn.disabled = true;
+  loginMessage.textContent = "Please wait...";
+
+  try {
+    const response = await fetch("/api/admin/login", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({
+        password: document.getElementById("password").value
+      })
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) throw new Error(result.message || "Login failed");
+
+    document.getElementById("password").value = "";
+    loginMessage.textContent = "";
+    showDashboard();
+  } catch (error) {
+    loginMessage.textContent = error.message;
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+async function loadOrders() {
+  orderMessage.textContent = "Loading orders...";
+  ordersBody.replaceChildren();
+
+  try {
+    const response = await fetch("/api/admin/orders");
+
+    if (response.status === 401) {
+      showLogin();
+      return;
+    }
+
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.message || "Could not load orders");
+
+    if (!result.orders.length) {
+      orderMessage.textContent = "No orders found.";
+      return;
+    }
+
+    orderMessage.textContent = result.orders.length + " orders found.";
+
+    result.orders.forEach(order => {
+      const tr = document.createElement("tr");
+
+      function cell(value) {
+        const td = document.createElement("td");
+        td.textContent = value == null ? "" : String(value);
+        tr.appendChild(td);
+      }
+
+      cell(order.id);
+      cell(order.customer_name);
+      cell(order.phone);
+      cell(order.address + (order.pincode ? ", " + order.pincode : ""));
+      cell(order.purpose);
+      cell(order.quantity);
+
+      const statusCell = document.createElement("td");
+      const select = document.createElement("select");
+
+      ["Pending","Confirmed","Delivered","Cancelled"].forEach(status => {
+        const option = document.createElement("option");
+        option.value = status;
+        option.textContent = status;
+        select.appendChild(option);
+      });
+
+      select.value = order.status || "Pending";
+      select.addEventListener("change", () => updateStatus(order.id, select));
+      statusCell.appendChild(select);
+      tr.appendChild(statusCell);
+
+      cell(order.created_at);
+
+      ordersBody.appendChild(tr);
+    });
+  } catch (error) {
+    orderMessage.textContent = error.message;
+  }
+}
+
+async function updateStatus(id, select) {
+  const newStatus = select.value;
+  select.disabled = true;
+
+  try {
+    const response = await fetch("/api/admin/orders/" + id, {
+      method: "PATCH",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({status:newStatus})
+    });
+
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.message || "Update failed");
+
+    orderMessage.textContent = "Order #" + id + " status updated.";
+  } catch (error) {
+    orderMessage.textContent = error.message;
+    loadOrders();
+  } finally {
+    select.disabled = false;
+  }
+}
+
+document.getElementById("refreshBtn").addEventListener("click", loadOrders);
+
+logoutBtn.addEventListener("click", async () => {
+  await fetch("/api/admin/logout", {method:"POST"});
+  showLogin();
+});
+
+checkLogin();
+</script>
+</body>
+</html>
