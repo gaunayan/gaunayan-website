@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const whatsappURL =
       "https://wa.me/" + whatsappNumber +
       "?text=" + encodeURIComponent(message);
+    // GAUNAYAN website order script
 
     window.open(whatsappURL, "_blank");
   });
